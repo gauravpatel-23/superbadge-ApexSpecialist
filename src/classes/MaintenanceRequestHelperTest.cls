@@ -88,7 +88,7 @@ private class MaintenanceRequestHelperTest {
         Test.stopTest();
 
         List<Case> queriedCases = CaseSelector.getCases(BULK_SIZE * 3);
-        System.assertEquals(BULK_SIZE * 2, queriedCases.size(), 'We expect two cases, one closed and one working.');
+        System.assertEquals(BULK_SIZE * 2, queriedCases.size(), 'Bulk produced wrong count of cases.');
 
         Integer closedCasesCount = 0;
         Integer workingCasesCount = 0;
@@ -100,5 +100,7 @@ private class MaintenanceRequestHelperTest {
                 ++closedCasesCount;
             }
         }
+        System.assertEquals(BULK_SIZE, closedCasesCount, 'Bulk produced wrong count of cases.');
+        System.assertEquals(BULK_SIZE, workingCasesCount, 'Bulk produced wrong count of cases.');
     }
 }
