@@ -1,9 +1,10 @@
 public class MaintenanceRequestHelper {
 
-
     public static final String TYPE_REPAIR = 'Repair';
     public static final String TYPE_ROUTINE_MAINTENANCE = 'Routine Maintenance';
     public static final String STATUS_CLOSED = 'Closed';
+    public static final String STATUS_WORKING = 'Working';
+
     public static final String SUBJECT = 'Routine Maintenance';
 
     private static final Date TODAY = Date.today();
@@ -13,7 +14,8 @@ public class MaintenanceRequestHelper {
         List<Case> casesWithChangedStatus = filterStatusChanged(newList, oldMap, STATUS_CLOSED);
 
         // filter all cases that are of type TYPE_REPAIR or TYPE_ROUTINE_MAINTENANCE
-        List<Case> filteredCases = filterByType(casesWithChangedStatus, new Set<String>{TYPE_REPAIR, TYPE_ROUTINE_MAINTENANCE});
+        Set<String> types = new Set<String>{TYPE_REPAIR, TYPE_ROUTINE_MAINTENANCE};
+        List<Case> filteredCases = filterByType(casesWithChangedStatus, types);
 
         // create new cases for closed ones
         List<Case> newCases = createNewCasesForClosedOnes(filteredCases);
@@ -31,12 +33,14 @@ public class MaintenanceRequestHelper {
 
         for (Case oldCase : cases) {
             Case newCase = new Case();
-            newCase.Vehicle__c = oldCase.Vehicle__c;
-            newCase.Equipment__c = oldCase.Equipment__c;
-            newCase.Type = TYPE_ROUTINE_MAINTENANCE;
-            newCase.Subject = SUBJECT;
-            newCase.Date_Reported__c = TODAY;
             newCase.Date_Due__c = calculateDueDate(caseIdToWorkParts.get(oldCase.Id));
+            newCase.Date_Reported__c = TODAY;
+            newCase.Equipment__c = oldCase.Equipment__c;
+            newCase.Status = STATUS_WORKING;
+            newCase.Subject = SUBJECT;
+            newCase.Type = TYPE_ROUTINE_MAINTENANCE;
+            newCase.Vehicle__c = oldCase.Vehicle__c;
+            // copy all other necessary fields
             newCases.add(newCase);
         }
         return newCases;
