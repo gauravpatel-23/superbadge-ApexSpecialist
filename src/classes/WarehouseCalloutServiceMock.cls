@@ -12,6 +12,7 @@ public class WarehouseCalloutServiceMock implements HttpCalloutMock {
     public HTTPResponse respond(HTTPRequest req) {
         HttpResponse resp = new HttpResponse();
         resp.setStatusCode(STATUS_CODE);
+        resp.setStatus(String.valueOf(STATUS_CODE));
         resp.setBody(BODY);
         return resp;
     }
